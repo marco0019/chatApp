@@ -1,6 +1,6 @@
-/*import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import Axios from 'axios';
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 export default function Users() {
     const [users, setUsers] = useState([{}]);
@@ -10,7 +10,7 @@ export default function Users() {
         });
     return (
         <View>
-            {users.map(usr=><Text key={usr}>{usr.user}</Text>)}
+            {users.map(usr=><Text>{usr.name}</Text>)}
         </View>
     )
-}*/
+}
