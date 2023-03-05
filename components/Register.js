@@ -6,15 +6,23 @@ const RegisterForm = ({ navigation }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+    const [error, setError] = useState('');
     const handleRegister = () => {
-        Axios.put(`https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/insertUser?secret=insertUser&usr=${name}&pass=${password}&email=${email}`).then(function (response) { })
-            .catch(function (error) {
-                console.log(error);
+        if (name == "" | email == "" | password == "")
+            setError("Any input is empty, please compile the form!")
+        else if (false) {
+
+        }
+        else {
+            Axios.put(`https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/insertUser?secret=insertUser&usr=${name}&pass=${password}&email=${email}`).then(function (response) { })
+                .catch(function (error) {
+                    setError(error)
+                });
+            navigation.navigate('ScreenB', {
+                transition: 'slideFromRight'
             });
-        navigation.navigate('ScreenB', {
-            transition: 'slideFromRight'
-        })
+
+        }
     };
     return (
         <View style={styles.container}>
@@ -38,7 +46,11 @@ const RegisterForm = ({ navigation }) => {
                 value={password}
                 secureTextEntry
             />
-            <Button title="Register" onPress={handleRegister} />
+            {error == "" ? null : <Text style={styles.error}>{error}</Text>}
+            {name == "" | email == "" | password == "" ?
+                <Button title="Register" disabled onPress={handleRegister} /> :
+                <Button title="Register"  onPress={handleRegister} />
+            }
         </View>
     );
 };
@@ -54,12 +66,21 @@ const styles = StyleSheet.create({
         fontSize: 24,
         marginBottom: 24,
     },
+    error: {
+        width: 200,
+        padding: 10,
+        borderColor: 'red',
+        color: 'red',
+        fontWeight: 'bold',
+        borderWidth: 1,
+        marginBottom: 8
+    },
     input: {
         borderWidth: 1,
         borderColor: '#777',
         padding: 8,
         margin: 8,
-        width: 200,
+        width: 200
     },
 });
 
