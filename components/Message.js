@@ -1,6 +1,7 @@
-/*import Axios from 'axios';
-import { View, Button, StyleSheet, Alert } from 'react-native-web';
+import Axios from 'axios';
+import { View, StyleSheet, Alert } from 'react-native-web';
 import React, { useState, useEffect } from 'react';
+
 export default function Messages({ ...prop }) {
     const [messages, setMessages] = useState([]);
     useEffect(() => {
@@ -8,11 +9,10 @@ export default function Messages({ ...prop }) {
             .then(function (response) { setMessages(response.data) })
             .catch(function (err) { Alert.alert("There was an error!", err.message) })
     }, [messages]);
-    const currentUser = ""
     return (
         <View>
             {messages.map((index, message) => {
-                <Message text={message.content} sender={currentUser === message.user}/>
+                <Message text={message.content} sender={prop.user === message.user}/>
             })}
         </View>
     )
@@ -54,4 +54,4 @@ const styles = StyleSheet.create({
         color: '#000',
         fontSize: 16,
     },
-});*/
+});
