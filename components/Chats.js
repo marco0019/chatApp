@@ -1,51 +1,42 @@
 import React, { useState, useEffect } from 'react'
-import { ScrollView, Text, StyleSheet, View, Alert, Image, TouchableOpacity } from "react-native"
+import { ScrollView, Text, StyleSheet, View, Alert, TouchableOpacity, Image } from "react-native"
 import Axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ContactImage } from './ContactImage'
 
-const ChatCell = ({ name, avatarUrl, preview, timestamp }) => {
-    return (
-        <TouchableOpacity onPress={()=>Alert.alert("errore")}>
-            <View style={styles.container} onPress={() => { Alert.alert("Errore") }}>
-                <Image source={{ uri: avatarUrl }} style={styles.avatar} />
-                <View style={styles.detailsContainer}>
-                    <View style={styles.row}>
-                        <Text style={styles.name}>{name}</Text>
-                        <Text style={styles.timestamp}>{timestamp}</Text>
-                    </View>
-                    <View style={styles.row}>
-                        <Icon name="check-all" size={16} color="#666" />
-                        <Text style={styles.preview}>{preview}</Text>
-                    </View>
-                </View>
-            </View>
-        </TouchableOpacity>
-    );
-};
-
-export default function Chats() {
-    const [chats, setChats] = useState([]);
-
+export default function Chats({ navigation }) {
+    const [chats, setChats] = useState([{ name: "", private: false }]);
     useEffect(() => {
         Axios.get(`https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/getChatList?secret=getChatList&usr=marco`)
             .then(function (response) {
                 setChats(response.data.chat);
             })
             .catch(function (error) {
-                Alert.alert("Error!", error)
+                Alert.alert("Error!", error.message)
             });
-    }, []);
-
+    }, [])
     return (
         <ScrollView style={styles.view}>
-            {chats == null ? null : chats.map((index, chat) => (
-                <ChatCell name={chat.name} avatarUrl={'../assets/favicon.png'} preview={'message'} timestamp={'19:00'} key={index}/>
+            {chats == null ? <Text>There aren't any chat yet</Text> : chats.map((chat, index) => (
+                <TouchableOpacity key={chat.name} onPress={() => { navigation.navigate("Login", { transition: 'slideFromRight' }) }}>
+                    <View style={styles.container}>
+                        <View style={styles.detailsContainer}>
+                            <View style={styles.row}>
+                                <Text style={styles.name}>{chat.name}</Text>
+                                <Text style={styles.timestamp}>{"19:00"}</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Icon name="check-all" size={16} color="#666" />
+                                <Text style={styles.preview}>{"message"}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </TouchableOpacity>
             ))}
         </ScrollView>
     )
 }
 
-//<Text style={styles.text}>{chat.name}</Text>
 const styles = StyleSheet.create({
     view: {
         width: '100%',
@@ -85,6 +76,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
         flex: 1,
+        color: '#000'
     },
     timestamp: {
         color: '#666',
@@ -97,4 +89,10 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         flex: 1,
     },
+    box: {
+        width: 200,
+        height: 200,
+        borderRadius: 100,
+        backgroundColor: '#777'
+    }
 })

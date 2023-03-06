@@ -14,14 +14,10 @@ const RegisterForm = ({ navigation }) => {
 
         }
         else {
-            Axios.put(`https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/insertUser?secret=insertUser&usr=${name}&pass=${password}&email=${email}`).then(function (response) { })
-                .catch(function (error) {
-                    setError(error)
-                });
-            navigation.navigate('ScreenB', {
+            Axios.put(`https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/insertUser?secret=insertUser&usr=${name}&pass=${password}&email=${email}`)
+            navigation.navigate("Chats", {
                 transition: 'slideFromRight'
             });
-
         }
     };
     return (
@@ -46,7 +42,7 @@ const RegisterForm = ({ navigation }) => {
                 value={password}
                 secureTextEntry
             />
-            {error == "" ? null : <Text style={styles.error}>{error}</Text>}
+            {error == "" ? <Text></Text> : <Text style={styles.error}>{error}</Text>}
             {name == "" | email == "" | password == "" ?
                 <Button title="Register" disabled onPress={handleRegister} /> :
                 <Button title="Register"  onPress={handleRegister} />

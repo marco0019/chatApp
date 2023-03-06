@@ -6,11 +6,14 @@ const LoginForm = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const handleRegister = () => {
-        Axios.get(`https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/getUser?secret=getUser&usr=${email}`).then(function (response) { })
+        Axios.get(`https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/getUser?secret=getUser&usr=${email}`)
+            .then(function (response) {
+                
+            })
             .catch(function (error) {
                 console.log(error);
             });
-        navigation.navigate('ScreenB', {
+        navigation.navigate('Chats', {
             transition: 'slideFromCenter'
         })
     };
@@ -30,8 +33,8 @@ const LoginForm = ({ navigation }) => {
                 value={password}
                 secureTextEntry
             />
-            <Button title="Register" onPress={handleRegister} />
-            <Button title='Have already an account?' color='#000' onPress={()=>navigation.navigate('Register')}/>
+            <Button title="Login" onPress={handleRegister} />
+            <Button title='Have already an account?' color='#000' onPress={() => navigation.navigate('Register')} />
         </View>
     );
 };
