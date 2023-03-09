@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
-
-function ChatInput() {
+import Axios from 'axios'
+function ChatInput({ user, chatName }) {
     const [message, setMessage] = useState('');
 
     const handleSendMessage = () => {
         if (message.trim() !== '') {
-            //onSendMessage(message);
+            Axios.post(`https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/insertMessage?secret=insertMessage&name=${chatName}&usr=${user}&type=text&content=${message}`)
             setMessage('');
         }
     };
@@ -17,8 +17,9 @@ function ChatInput() {
         <KeyboardAwareScrollView
             resetScrollToCoords={{ x: 0, y: 0 }}
             contentContainerStyle={styles.container}
-            scrollEnabled={true}
+            scrollEnabled={false}
             extraHeight={120}
+            behavior="padding" // Aggiunta della prop behavior
         >
             <View style={styles.inputContainer}>
                 <TextInput
@@ -40,6 +41,7 @@ const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
         justifyContent: 'flex-end',
+        color: '#fff'
     },
     inputContainer: {
         flexDirection: 'row',
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 16,
         borderTopWidth: 1,
-        borderTopColor: '#ccc',
+        borderTopColor: '#ccc'
     },
     input: {
         flex: 1,
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
         lineHeight: 24,
     },
     sendButton: {
-        backgroundColor: '#5e5',
+        backgroundColor: 'blue',
         borderRadius: 24,
         padding: 8,
     },

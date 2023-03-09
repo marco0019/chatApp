@@ -2,23 +2,25 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import Axios from 'axios';
 
-const RegisterForm = ({ navigation }) => {
-    const [name, setName] = useState('');
+const RegisterForm = ({ navigation, setUser, setChats }) => {
+    const [name, setName] = useState("");
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const handleRegister = () => {
-        if (name == "" | email == "" | password == "")
-            setError("Any input is empty, please compile the form!")
-        else if (false) {
-
-        }
-        else {
-            Axios.put(`https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/insertUser?secret=insertUser&usr=${name}&pass=${password}&email=${email}`)
-            navigation.navigate("Chats", {
-                transition: 'slideFromRight'
-            });
-        }
+        Axios.put(`https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/insertUser?secret=insertUser&usr=${name}&email=${email}&pass=${password}`)
+        .then(function(){
+            setUser(name)
+            Axios.get("https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/getChatList?secret=getChatList&usr=marco")
+            .then(function(response){
+                setChats(response.data.chat)
+                console.table(response.data.chat)
+            })
+            .catch(function(err){
+                console.log();
+            })
+        })
+        .catch(function(err){})
     };
     return (
         <View style={styles.container}>
@@ -42,10 +44,10 @@ const RegisterForm = ({ navigation }) => {
                 value={password}
                 secureTextEntry
             />
-            {error == "" ? <Text></Text> : <Text style={styles.error}>{error}</Text>}
+            <Text style={styles.error & error != ""}>{error}</Text>
             {name == "" | email == "" | password == "" ?
                 <Button title="Register" disabled onPress={handleRegister} /> :
-                <Button title="Register"  onPress={handleRegister} />
+                <Button title="Register" onPress={handleRegister} />
             }
         </View>
     );
@@ -53,6 +55,8 @@ const RegisterForm = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
+        width: '100%',
+        height: '100%',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
