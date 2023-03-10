@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ScrollView, Text, View, TouchableOpacity } from "react-native"
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const Stack = createStackNavigator();
 
 export default function Main({ user, chatList }) {
+    const [theme, setTheme] = useState(false);
     useEffect(() => {
     }, [chatList, user])
     const ChatList = ({ navigation }) => {

@@ -1,7 +1,11 @@
-import { Button } from "react-native"
+import { TouchableOpacity } from "react-native"
+import { FaMoon } from 'react-icons/fa'
+import { FiSun } from 'react-icons/fa'
 
-export default function ChangeMode({ ...prop }) {
+export default function ChangeMode({ theme, action }) {
     return (
-        <Button title={prop.dark ? <FaMoon/> : <FiSun/>} onPress={prop.action}/>
+        <TouchableOpacity onPress={action}>
+            {theme ? <FaMoon /> : <FiSun />}
+        </TouchableOpacity>
     )
 }

@@ -14,36 +14,40 @@ export default function Messages({ route }) {
             })
             .catch(function (err) { Alert.alert("There was an error!", err.message) })
 
-    }, [route.params.chatName]);
+    }, [route.params.chatName, messages]);
     return (
-        <ScrollView style={styles.container}>
-            {messages.length == 0 ? <Text>There aren't any messages yet...</Text> : (messages.map((message, index) => {
-                const Hours = new Date(message.date)
-                return (
-                    <Message key={index}
-                        text={message.content}
-                        sender={route.params.user === message.user}
-                        user={message.user}
-                        isGroup={route.params.isGroup}
-                        date={Hours.getHours() + ":" + Hours.getMinutes()} />)
-            }))}
+        <View style={styles.viewContainer}>
+            <ScrollView style={styles.containerScroll}>
+                {messages.length == 0 ? <Text>There aren't any messages yet...</Text> : (messages.map((message, index) => {
+                    const Hours = new Date(message.date)
+                    return (
+                        <Message key={index}
+                            text={message.content}
+                            sender={route.params.user === message.user}
+                            user={message.user}
+                            isGroup={route.params.isGroup}
+                            date={Hours.getHours() + ":" + Hours.getMinutes()} />)
+                }))}
+            </ScrollView>
             <ChatInput user={route.params.user} chatName={route.params.chatName} />
-        </ScrollView>
+        </View>
     )
 }
 const Message = ({ text, sender, isGroup, user, date }) => {
     const isMessageFromMe = sender;
-    const isMessageLong = text.length > 30;
 
     return (
-        <View style={styles.container}>
+        <View style={styles.containerMessage}>
             <View
                 style={isMessageFromMe ? styles.meContainer : styles.otherContainer}
             >
                 <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                    <Text style={isMessageFromMe ? styles.meName : styles.otherName}>
-                        {user}
-                    </Text>
+                    {sender ?
+                        null :
+                        <Text style={isMessageFromMe ? styles.meName : styles.otherName}>
+                            {user}
+                        </Text>
+                    }
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', maxWidth: 500, alignItems: 'flex-end' }}>
                         <Text style={isMessageFromMe ? styles.meText : styles.otherText}>{text}</Text>
                         <Text style={styles.messageInfoText}>{' ' + date}</Text>
@@ -55,11 +59,17 @@ const Message = ({ text, sender, isGroup, user, date }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    viewContainer: {
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+        display: 'flex',
+        backgroundColor: '#000'
+    },
+    containerScroll: {
+        height: '80%',
         backgroundColor: '#000',
-        color: '#fff',
-        position: 'relative'
+        transform: 'translateY(-70px)'
     },
     meContainer: {
         alignSelf: 'flex-end',
@@ -74,7 +84,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#111',
         borderRadius: 8,
         padding: 8,
-        margin: 8,
+        margin: 4,
         maxWidth: '80%',
     },
     meText: {

@@ -16,10 +16,9 @@ function ChatInput({ user, chatName }) {
     return (
         <KeyboardAwareScrollView
             resetScrollToCoords={{ x: 0, y: 0 }}
-            contentContainerStyle={styles.container}
-            scrollEnabled={false}
-            extraHeight={120}
-            behavior="padding" // Aggiunta della prop behavior
+            scrollEnabled={true}
+            style={styles.container}
+            extraHeight={100}
         >
             <View style={styles.inputContainer}>
                 <TextInput
@@ -39,18 +38,16 @@ function ChatInput({ user, chatName }) {
 
 const styles = StyleSheet.create({
     container: {
-        flexGrow: 1,
-        justifyContent: 'flex-end',
-        color: '#fff'
+        backgroundColor: '#000',
+        display: 'flex',
+        position: 'absolute',
+        bottom: 20,
+        width: '90%',
+        left: '5%',
     },
     inputContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#f5f5f5',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderTopWidth: 1,
-        borderTopColor: '#ccc'
+        backgroundColor: '#000'
     },
     input: {
         flex: 1,
@@ -64,7 +61,7 @@ const styles = StyleSheet.create({
         lineHeight: 24,
     },
     sendButton: {
-        backgroundColor: 'blue',
+        backgroundColor: '#11d',
         borderRadius: 24,
         padding: 8,
     },
