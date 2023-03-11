@@ -1,39 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ScrollView, Text, View, TouchableOpacity } from "react-native"
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity, useColorScheme, StatusBar } from "react-native"
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Messages from './components/Message';
+import colors from './components/Styles';
 
 const Stack = createStackNavigator();
+const pr = StyleSheet.create({
+    prove: {
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0
+    }
+})
 
 export default function Main({ user, chatList }) {
-    const [theme, setTheme] = useState(false);
+    const [theme, setTheme] = useState(useColorScheme() === 'dark');
+    const styles = stylesheet(theme)
     useEffect(() => {
     }, [chatList, user])
     const ChatList = ({ navigation }) => {
         return (
-            <ScrollView style={[styles.container, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>
-                {chatList == null ?
-                    <Text style={[styles.noChats, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>You don't have any chats yet.</Text> :
-                    chatList.map((chat) =>
-                        <TouchableOpacity key={chat.name} onPress={() => { navigation.navigate("global") }}>
-                            <View style={[styles.chatContainer, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>
-                                <View style={[styles.avatarContainer, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>
-                                    <Text style={[styles.avatarText, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>{chat.name.toUpperCase().charAt(0)}</Text>
-                                </View>
-                                <View style={[styles.detailsContainer, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>
-                                    <Text style={[styles.nameText, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>{chat.name}</Text>
-                                    <View style={styles.row}>
-                                        <Icon name="check-all" size={18} color="#2f9bff" />
-                                        <Text style={[styles.previewText, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>message</Text>
-                                        <Text style={[styles.timestampText, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>prova</Text>
+            <View style={styles.viewContainer}>
+                <ScrollView style={styles.container}>
+                    {chatList == null ?
+                        <Text style={styles.noChats}>You don't have any chats yet.</Text> :
+                        chatList.map((chat) =>
+                            <TouchableOpacity key={chat.name} onPress={() => { navigation.navigate("global") }}>
+                                <View style={styles.chatContainer}>
+                                    <View style={styles.avatarContainer}>
+                                        <Text style={styles.avatarText}>{chat.name.toUpperCase().charAt(0)}</Text>
+                                    </View>
+                                    <View style={styles.detailsContainer}>
+                                        <Text style={styles.nameText}>{chat.name}</Text>
+                                        <View style={styles.row}>
+                                            <Icon name="check-all" size={18} color={colors.primary[Number(theme)]} />
+                                            <Text style={styles.previewText}>message</Text>
+                                            <Text style={styles.timestampText}>prova</Text>
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
-                        </TouchableOpacity>
-                    )}
-            </ScrollView>
+                            </TouchableOpacity>
+                        )}
+                    <StatusBar barStyle='auto' />
+                </ScrollView>
+                <TouchableOpacity onPress={()=>{}} style={styles.newChatButton}>
+                    <Icon name="chat-plus" size={30} color={'#BDBDBD'}/>
+                </TouchableOpacity>
+            </View>
         )
     }
     return (
@@ -41,110 +55,133 @@ export default function Main({ user, chatList }) {
             <Stack.Navigator
                 screenOptions={{
                     headerStyle: {
-                        backgroundColor: '#000',
+                        backgroundColor: colors.backSecondary[Number(theme)],
                     },
                     headerTitleStyle: {
                         fontWeight: 'bold',
                         fontSize: 20,
-                        color: '#fff',
+                        color: colors.textPrimary[Number(theme)],
                     },
-                    headerTintColor: '#fff',
+                    headerTintColor: colors.backSecondary[Number(theme)],
                 }}>
                 <Stack.Screen
                     name="Chats"
                     component={ChatList}
                     options={{
                         headerRight: () => (
-                            <TouchableOpacity onPress={() => setTheme(!theme)}>
-                                <Icon name={theme ? "brightness-2" : "brightness-7"} size={24} color="#fff" />
+                            <TouchableOpacity onPress={() => setTheme(!theme)} style={{ marginRight: 20 }}>
+                                <Icon name={theme ? "brightness-2" : "brightness-7"} size={24} color={colors.textSecondary[Number(theme)]} />
                             </TouchableOpacity>
                         ),
+
                         title: 'Chats',
+                        headerStyle: {
+                            backgroundColor: colors.backSecondary[Number(theme)],
+                        },
+                        headerTitleStyle: {
+                            fontWeight: 'bold',
+                            fontSize: 20,
+                            color: colors.textPrimary[Number(theme)],
+                        },
+                        headerTintColor: colors.backSecondary[Number(theme)],
                     }} />
-                {
-                    chatList.map(chat => {
-                        console.log(chat);
-                        return (
-                            <Stack.Screen
-                                key={chat.name}
-                                name={chat.name}
-                                component={Messages}
-                                initialParams={{ user: user, chatName: chat.name, isGroup: chat.private }}
-                                options={{
-                                    headerRight: () => (
-                                        <TouchableOpacity onPress={() => console.log('Pressed')}>
-                                            <Icon name="bell" size={24} color="#fff" />
-                                        </TouchableOpacity>
-                                    ),
-                                    title: 'Home',
-                                }} />
-                        )
-                    })
-                }
+                {chatList.map(chat => {
+                    return (
+                        <Stack.Screen
+                            key={chat.name}
+                            name={chat.name}
+                            component={Messages}
+                            initialParams={{ user: user, chatName: chat.name, isGroup: chat.private, theme: theme }}
+                            options={{
+                                headerRight: () => (
+                                    <TouchableOpacity onPress={() => setTheme(!theme)} style={{ marginRight: 20 }}>
+                                        <Icon name={theme ? "brightness-2" : "brightness-7"} size={24} color={colors.textSecondary[Number(theme)]} />
+                                    </TouchableOpacity>
+                                ),
+                                title: chat.name.toString(),
+                            }} />)
+                })}
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
-
-const styles = {
-    theme: false,
-    container: {
-        flex: 1,
-        backgroundColor: this.theme ? '#f5f5f5' : "#121212",
-    },
-    noChats: {
-        paddingVertical: 20,
-        textAlign: 'center',
-        fontSize: 16,
-        color: this.theme ? '#000' : '#fff',
-    },
-    chatContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-    avatarContainer: {
-        backgroundColor: '#fff',
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: 10,
-        borderWidth: 2,
-        borderColor: '#2f9bff',
-    },
-    avatarText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#2f9bff',
-    },
-    detailsContainer: {
-        flex: 1,
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: 5,
-    },
-    nameText: {
-        fontWeight: 'bold',
-        fontSize: 16,
-        color: '#000',
-        marginBottom: 5,
-    },
-    timestampText: {
-        fontSize: 12,
-        color: '#000',
-        marginLeft: 10,
-    },
-    previewText: {
-        fontSize: 14,
-        color: '#000',
-        marginLeft: 10,
-        flex: 1,
-    },
+const stylesheet = theme => {
+    return {
+        viewContainer: {
+            width: '100%',
+            height: '100%',
+            flex: 1,
+            backgroundColor: colors.backSecondary[Number(theme)]
+        },
+        container: {
+            backgroundColor: colors.backSecondary[Number(theme)],//theme ? '#bbb' : "#121212"
+        },
+        noChats: {
+            paddingVertical: 20,
+            textAlign: 'center',
+            fontSize: 16,
+            color: colors.textPrimary[Number(theme)],
+        },
+        newChatButton: {
+            width: 40,
+            height: 50,
+            borderTopLeftRadius: 30,
+            borderBottomLeftRadius: 30,
+            backgroundColor: '#128C7E',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            bottom: 20,
+            right: 0
+        },
+        chatContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 10,
+            borderBottomWidth: 1,
+            borderBottomColor: colors.backTernary[Number(!theme)],
+        },
+        avatarContainer: {
+            backgroundColor: colors.backSecondary[Number(theme)],
+            width: 50,
+            height: 50,
+            borderRadius: 25,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginRight: 10,
+            borderWidth: 2,
+            borderColor: colors.backSecondary[Number(!theme)],
+        },
+        avatarText: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: colors.backSecondary[Number(!theme)],
+        },
+        detailsContainer: {
+            flex: 1,
+        },
+        row: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginTop: 5,
+        },
+        nameText: {
+            fontWeight: 'bold',
+            fontSize: 16,
+            color: colors.textPrimary[Number(theme)],
+            marginBottom: 5,
+        },
+        timestampText: {
+            fontSize: 12,
+            color: colors.textPrimary[Number(theme)],
+            marginLeft: 10,
+        },
+        previewText: {
+            fontSize: 14,
+            color: colors.textPrimary[Number(theme)],
+            marginLeft: 10,
+            flex: 1,
+        },
+    }
 };
