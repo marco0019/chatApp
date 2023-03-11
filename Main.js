@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ScrollView, Text, View, TouchableOpacity } from "react-native"
-import Messages from './components/Message';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Messages from './components/Message';
 
 const Stack = createStackNavigator();
 
@@ -13,21 +13,21 @@ export default function Main({ user, chatList }) {
     }, [chatList, user])
     const ChatList = ({ navigation }) => {
         return (
-            <ScrollView style={styles.container}>
+            <ScrollView style={[styles.container, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>
                 {chatList == null ?
-                    <Text style={styles.noChats}>You don't have any chats yet.</Text> :
+                    <Text style={[styles.noChats, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>You don't have any chats yet.</Text> :
                     chatList.map((chat) =>
-                        <TouchableOpacity key={chat.name} onPress={() => { console.log("prrrr"); navigation.navigate("global") }}>
-                            <View style={styles.chatContainer}>
-                                <View style={styles.avatarContainer}>
-                                    <Text style={styles.avatarText}>{chat.name.toUpperCase().charAt(0)}</Text>
+                        <TouchableOpacity key={chat.name} onPress={() => { navigation.navigate("global") }}>
+                            <View style={[styles.chatContainer, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>
+                                <View style={[styles.avatarContainer, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>
+                                    <Text style={[styles.avatarText, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>{chat.name.toUpperCase().charAt(0)}</Text>
                                 </View>
-                                <View style={styles.detailsContainer}>
-                                    <Text style={styles.nameText}>{chat.name}</Text>
+                                <View style={[styles.detailsContainer, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>
+                                    <Text style={[styles.nameText, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>{chat.name}</Text>
                                     <View style={styles.row}>
                                         <Icon name="check-all" size={18} color="#2f9bff" />
-                                        <Text style={styles.previewText}>message</Text>
-                                        <Text style={styles.timestampText}>prova</Text>
+                                        <Text style={[styles.previewText, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>message</Text>
+                                        <Text style={[styles.timestampText, {backgroundColor: theme ? "#ddd" : "#222", color: theme ? "#000" : "#fff"}]}>prova</Text>
                                     </View>
                                 </View>
                             </View>
@@ -39,21 +39,28 @@ export default function Main({ user, chatList }) {
     return (
         <NavigationContainer>
             <Stack.Navigator
-            screenOptions={{
-                headerStyle: {
-                  backgroundColor: '#000',
-                },
-                headerTitleStyle: {
-                  fontWeight: 'bold',
-                  fontSize: 20,
-                  color: '#fff',
-                },
-                headerTintColor: '#fff',
-              }}>
+                screenOptions={{
+                    headerStyle: {
+                        backgroundColor: '#000',
+                    },
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                        fontSize: 20,
+                        color: '#fff',
+                    },
+                    headerTintColor: '#fff',
+                }}>
                 <Stack.Screen
                     name="Chats"
                     component={ChatList}
-                />
+                    options={{
+                        headerRight: () => (
+                            <TouchableOpacity onPress={() => setTheme(!theme)}>
+                                <Icon name={theme ? "brightness-2" : "brightness-7"} size={24} color="#fff" />
+                            </TouchableOpacity>
+                        ),
+                        title: 'Chats',
+                    }} />
                 {
                     chatList.map(chat => {
                         console.log(chat);
@@ -80,15 +87,16 @@ export default function Main({ user, chatList }) {
 }
 
 const styles = {
+    theme: false,
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: this.theme ? '#f5f5f5' : "#121212",
     },
     noChats: {
         paddingVertical: 20,
         textAlign: 'center',
         fontSize: 16,
-        color: '#000',
+        color: this.theme ? '#000' : '#fff',
     },
     chatContainer: {
         flexDirection: 'row',

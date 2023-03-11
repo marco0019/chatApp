@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         backfaceVisibility: false,
         display: 'flex',
         position: 'absolute',
-        bottom: 10,
+        bottom: 20,
         width: '90%',
         left: '5%',
     },
