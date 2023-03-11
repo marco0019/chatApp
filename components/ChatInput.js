@@ -38,16 +38,17 @@ function ChatInput({ user, chatName }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#000',
+        backgroundColor: 'transparent',
+        backfaceVisibility: false,
         display: 'flex',
         position: 'absolute',
-        bottom: 20,
+        bottom: 10,
         width: '90%',
         left: '5%',
     },
     inputContainer: {
         flexDirection: 'row',
-        backgroundColor: '#000'
+        backgroundColor: 'transparent'
     },
     input: {
         flex: 1,
@@ -61,9 +62,12 @@ const styles = StyleSheet.create({
         lineHeight: 24,
     },
     sendButton: {
-        backgroundColor: '#11d',
+        backgroundColor: '#22b',
         borderRadius: 24,
-        padding: 8,
+        width: 45,
+        height: 45,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
 });
 

@@ -26,18 +26,19 @@ export default function Messages({ route }) {
                             sender={route.params.user === message.user}
                             user={message.user}
                             isGroup={route.params.isGroup}
-                            date={Hours.getHours() + ":" + Hours.getMinutes()} />)
+                            date={Hours.getHours() + ":" + Hours.getMinutes()}
+                            isLast={index == messages.length - 1} />)
                 }))}
             </ScrollView>
             <ChatInput user={route.params.user} chatName={route.params.chatName} />
         </View>
     )
 }
-const Message = ({ text, sender, isGroup, user, date }) => {
+const Message = ({ text, sender, isGroup, user, date, isLast }) => {
     const isMessageFromMe = sender;
 
     return (
-        <View style={styles.containerMessage}>
+        <View style={[styles.containerMessage, {marginBottom: isLast ? 65 : 0}]}>
             <View
                 style={isMessageFromMe ? styles.meContainer : styles.otherContainer}
             >
@@ -67,16 +68,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#000'
     },
     containerScroll: {
-        height: '80%',
+        height: '100%',
         backgroundColor: '#000',
-        transform: 'translateY(-70px)'
     },
     meContainer: {
         alignSelf: 'flex-end',
         backgroundColor: '#113',
         borderRadius: 8,
         padding: 8,
-        margin: 8,
+        margin: 2,
         maxWidth: '80%',
     },
     otherContainer: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#111',
         borderRadius: 8,
         padding: 8,
-        margin: 4,
+        margin: 2,
         maxWidth: '80%',
     },
     meText: {

@@ -8,7 +8,7 @@ const LoginForm = ({ navigation }) => {
     const handleRegister = () => {
         Axios.get(`https://eu-central-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/data-kxsej/service/exampleApi/incoming_webhook/getUser?secret=getUser&usr=${email}`)
             .then(function (response) {
-                
+
             })
             .catch(function (error) {
                 console.log(error);
@@ -38,7 +38,6 @@ const LoginForm = ({ navigation }) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
